@@ -6,7 +6,8 @@ let driver = new Builder().forBrowser('firefox').build();
 // Array of test cases for search field
 let testCases = [
   { search: '1 2 3', expected: true },
-  { search: '123', expected: true },
+  { search: '123', expected: false },
+  { search: '1 2 30', expected: false },
   { search: '1 2 3 3 2 1', expected: true },
   { search: '1 2 3 2 1', expected: true },
   { search: '1 1 2 2 3 3', expected: false },
@@ -15,6 +16,11 @@ let testCases = [
   { search: '3 2 1', expected: false },
   { search: '3 2 1 2 3', expected: true },
   { search: 'abcde', expected: false },
+  { search: `'1 2 3'`, expected: true },
+  { search: `"1 2 3"`, expected: true },
+  { search: `1 1 2 3 2 3`, expected: true },
+  { search: `54658165131313213213215615646581891897891 1 2 3`, expected: true },
+  { search: `1 -2 3`, expected: false },
   { search: '', expected: null }
 ];
 
@@ -27,19 +33,33 @@ async function main() {
     // Need to click the 'Find' link, otherwise returns JSON response if navigated to directly
     await driver.findElement(By.linkText(`Find '1 2 3'`)).click();
 
-    let failedCases = 0;
+    // Load the search form to see if we are on the right page
+    await driver.findElement(By.id('searchtext'));
+    console.log('Passed: Reached webpage');
+  } catch (err) {
+    console.log('FAILED: Webpage not reached. Error:, ', err);
+  }
+  try {
+    let failedCases = [];
     for (let i = 0; i < testCases.length; i++) {
+      // Use await inside for loop to be able to clear form between searches
       let result = await searchString(testCases[i].search, driver);
 
       if (result === testCases[i].expected) {
         console.log(`Passed: '${testCases[i].search}'`);
       } else {
         console.log(`FAILED: '${testCases[i].search}'`);
-        failedCases++;
+        console.log(`Expected: ${testCases[i].expected}, Got: ${result}`);
+        failedCases.push(testCases[i].search);
       }
     }
 
-    console.log(`${failedCases} tests failed. See above console logs for failed tests`);
+    if (failedCases.length !== 0) {
+      console.log(`The following ${failedCases.length} tests failed:`);
+      failedCases.forEach(failedCase => console.log(failedCase));
+    } else {
+      console.log(`All test cases passed`);
+    }
   } catch (err) {
     console.log(err);
   }
