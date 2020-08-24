@@ -1,7 +1,6 @@
 'use strict';
 
 let { Builder, By } = require('selenium-webdriver');
-let driver = new Builder().forBrowser('firefox').build();
 
 // Array of test cases for search field
 let testCases = [
@@ -25,6 +24,7 @@ let testCases = [
 ];
 
 async function main() {
+  let driver = new Builder().forBrowser('firefox').build();
   try {
     // Navigate to base url
     let baseUrl = 'https://sdetassessment.azurewebsites.net/';
@@ -35,9 +35,12 @@ async function main() {
 
     // Load the search form to see if we are on the right page
     await driver.findElement(By.id('searchtext'));
+
     console.log('Passed: Reached webpage');
   } catch (err) {
-    console.log('FAILED: Webpage not reached. Error:, ', err);
+    console.log('FAILED: Webpage not reached. Error: ', err);
+    await driver.quit();
+    process.exit();
   }
   try {
     let failedCases = [];
@@ -63,6 +66,8 @@ async function main() {
   } catch (err) {
     console.log(err);
   }
+  await driver.quit();
+  process.exit();
 }
 
 main();
@@ -70,7 +75,7 @@ main();
 /**
  * Get field ID number from field group lookup
  * @param {String} inputString String inside of the search form to be verified
- * @param {Builder} webDriver Selenium driver linked to a web page
+ * @param {WebDriver} webDriver Selenium driver linked to a web page
  * @return {Boolean} True/false result returned by webpage
  */
 async function searchString(inputString, webDriver) {
