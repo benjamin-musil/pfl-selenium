@@ -1,7 +1,5 @@
 'use strict';
 
-// let testFile = require('./testCases.js');
-
 let { Builder, By } = require('selenium-webdriver');
 let driver = new Builder().forBrowser('firefox').build();
 
@@ -12,10 +10,7 @@ async function main() {
     await driver.get(baseUrl);
 
     // Need to click link the 'Find' link, otherwise returns JSON response if navigated to directly
-    driver.findElement(By.linkText(`Find '1 2 3'`)).click();
-
-    // Timeout so that the search form has time to load
-    await new Promise(r => setTimeout(r, 2000));
+    await driver.findElement(By.linkText(`Find '1 2 3'`)).click();
 
     // Array of test cases for search field
     let testCases = [
