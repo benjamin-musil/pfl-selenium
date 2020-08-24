@@ -18,5 +18,8 @@
   "homepage": "https://github.com/benjamin-musil/pfl-selenium#readme",
   "devDependencies": {
     "eslint": "^7.7.0"
+  },
+  "dependencies": {
+    "restify": "^8.5.1"
   }
 }
