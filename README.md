@@ -19,7 +19,7 @@ $ npm install
 $ node app.js
 ```
 
-### Add GeckoDriver to PATH (Unix)
+### Add GeckoDriver to PATH (Unix/Linux)
 Check repo link in the requirements section to check for latest driver
 
 ```sh
