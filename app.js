@@ -14,13 +14,22 @@ let testCases = [
   { search: '3 2 1', expected: false },
   { search: '3 2 1 2 3', expected: true },
   { search: 'abcde', expected: false },
-  { search: `'1 2 3'`, expected: true },
-  { search: `"1 2 3"`, expected: true },
   { search: `1 1 2 3 2 3`, expected: true },
   { search: `54658165131313213213215615646581891897891 1 2 3`, expected: true },
   { search: `1 -2 3`, expected: false },
   { search: '', expected: null }
 ];
+
+// Add test cases for special characters
+let delimiterArray = '~`!@#$%\\^&*+=\\[\\]\\\\\';,/{}|\\\\":<>\\?'.split('');
+delimiterArray.forEach((char) => {
+  let searchText = `${char}1${char}2${char}3${char}`;
+  let testCase = { search: searchText, expected: true };
+  testCases.push(testCase);
+  searchText = `1${char}2${char}3`;
+  testCase = { search: searchText, expected: true };
+  testCases.push(testCase);
+});
 
 async function main() {
   let driver = new Builder().forBrowser('firefox').build();
