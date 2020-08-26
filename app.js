@@ -2,7 +2,6 @@
 
 let { Builder, By } = require('selenium-webdriver');
 
-// Array of test cases for search field
 let testCases = [
   { search: '1 2 3', expected: true },
   { search: '123', expected: false },
@@ -26,11 +25,11 @@ let testCases = [
 async function main() {
   let driver = new Builder().forBrowser('firefox').build();
   try {
-    // Navigate to base url
+    // Navigate browser to base url page
     let baseUrl = 'https://sdetassessment.azurewebsites.net/';
     await driver.get(baseUrl);
 
-    // Need to click the 'Find' link, otherwise returns JSON response if navigated to directly
+    // Need to click the 'Find' link, otherwise browser returns object response if navigated to directly
     await driver.findElement(By.linkText(`Find '1 2 3'`)).click();
 
     // Load the search form to see if we are on the right page
@@ -42,10 +41,11 @@ async function main() {
     await driver.quit();
     process.exit();
   }
+
   try {
     let failedCases = [];
     for (let i = 0; i < testCases.length; i++) {
-      // Use await inside for loop to be able to clear form between searches
+      // Use await inside for loop to clear search form between searches
       let result = await searchString(testCases[i].search, driver);
 
       if (result === testCases[i].expected) {
@@ -72,6 +72,8 @@ async function main() {
 
 main();
 
+// HELPER FUNCTIONS
+
 /**
  * Get field ID number from field group lookup
  * @param {String} inputString String inside of the search form to be verified
@@ -85,8 +87,11 @@ async function searchString(inputString, webDriver) {
     searchForm.sendKeys(inputString);
     let searchButton = await webDriver.findElement(By.id('searchbutton'));
     searchButton.click();
+
+    // The second paragraph tag contains the response to the query
     let responseArray = await webDriver.findElements(By.tagName('p'));
     let response = await responseArray[1].getText();
+
     let falseReturn
       = 'False: The text does not contain the integers 1 2 3 in this order.';
     let trueReturn
