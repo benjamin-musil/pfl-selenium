@@ -60,9 +60,12 @@ async function main() {
       if (result === testCases[i].expected) {
         console.log(`Passed: '${testCases[i].search}'`);
       } else {
-        console.log(`FAILED: '${testCases[i].search}'`);
-        console.log(`Expected: ${testCases[i].expected}, Got: ${result}`);
-        failedCases.push(testCases[i].search);
+        console.log(`FAILED: '${testCases[i].search}', `
+          + `Expected: ${testCases[i].expected}, Got: ${result}`);
+        let failedCaseLog = `FAILED: '${testCases[i].search}', `
+          + `Expected: ${testCases[i].expected}, `
+          + `Got: ${result}`;
+        failedCases.push(failedCaseLog);
       }
     }
 
